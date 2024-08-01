@@ -10,7 +10,7 @@ function init() {
   
     loadMainPrompts();
   }
-
+// Options menu
 function loadMainPrompts() {
     prompt([
       {
@@ -69,20 +69,23 @@ function loadMainPrompts() {
         case "VIEW_DEPARTMENTS":
           viewDepartments();
           break;
-        // case "ADD_DEPARTMENT":
-        //   addDepartment();
-        //   break;
+        case "ADD_DEPARTMENT":
+          addDepartment();
+          break;
         case "VIEW_ROLES":
           viewRoles();
           break;
-        // case "ADD_ROLE":
-        //   addRole();
-        //   break;
+        case "ADD_ROLE":
+          addRole();
+          break;
         default:
           quit();
 }
 });
 };
+
+// ------Response functions, functions with "db.-" prefix are pulled from db/index.js -------------
+
 // >>>EMPLOYEES FUNCTIONS
 // ***View all employees
 function viewEmployees() {
@@ -220,6 +223,40 @@ function viewRoles() {
       .then(() => loadMainPrompts());
   }
 
+// ***Add a role
+function addRole() {
+    // PROMPTS: name role, assign salary value, assign to department
+    db.findAllDepartments().then(({ rows }) => {
+      let departments = rows;
+      const departmentChoices = departments.map(({ id, name }) => ({
+        name: name,
+        value: id,
+      }));
+  
+      prompt([
+        {
+          name: "title",
+          message: "What is the name of the role?",
+        },
+        {
+          name: "salary",
+          message: "What is the salary of the role?",
+        },
+        {
+          type: "list",
+          name: "department_id",
+          message: "Which department does the role belong to?",
+          choices: departmentChoices,
+        },
+        // render to database
+      ]).then((role) => {
+        db.createRole(role)
+          .then(() => console.log(`Added ${role.title} to the database`))
+          .then(() => loadMainPrompts());
+      });
+    });
+  }
+
 // >>> DEPARTMENT FUNCTIONS
 // ***View all deparments
 function viewDepartments() {
@@ -230,6 +267,21 @@ function viewDepartments() {
         console.table(departments);
       })
       .then(() => loadMainPrompts());
+  }
+
+// ***Add a department
+function addDepartment() {
+    prompt([
+      {
+        name: "name",
+        message: "What is the name of the department?",
+      },
+    ]).then((res) => {
+      let name = res;
+      db.createDepartment(name)
+        .then(() => console.log(`Added ${name.name} to the database`))
+        .then(() => loadMainPnrompts());
+    });
   }
 
   // Exit the application

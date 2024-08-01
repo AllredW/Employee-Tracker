@@ -1,5 +1,5 @@
 const pool = require('./connection');
-
+// creates login profile to connect to sql server
 class DB {
   constructor() {}
 
@@ -38,12 +38,21 @@ class DB {
   }
 
 //>>>    ROLES FUNCTIONS
-  // Find all roles, used with createEmployee, updateEmployeeRole
+// Find all roles, used with createEmployee, updateEmployeeRole
   findAllRoles() {
     return this.query(
       'SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;'
     );
   }
+
+// Create a new role
+    createRole(role) {
+        const { title, salary, department_id } = role;
+        return this.query(
+          'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)',
+          [title, salary, department_id]
+        );
+      }
 
 // >>> DEPARTMENTS FUNCTIONS
   // Find all departments
@@ -51,6 +60,11 @@ class DB {
     return this.query('SELECT department.id, department.name FROM department;');
   }
 
+ // Create a new department
+ createDepartment(department) {
+    return this.query('INSERT INTO department (name) VALUES ($1)', [
+      department.name,
+    ]);
+  }
 }
-
 module.exports = new DB();

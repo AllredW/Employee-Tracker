@@ -1,5 +1,5 @@
 \c employee_tracker_db;
-
+-- id numbers reference position in the array of the target table; manager_id references other points within the "employee" table
 INSERT INTO department(name)
 VALUES ('Medicine'),
        ('Surgery'),
