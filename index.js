@@ -3,7 +3,6 @@ const { prompt } = require("inquirer");
 const db = require("./db");
 
 init();
-loadMainPrompts();
 
 function init() {
     console.log("Welcome to Sacred Heart Hospital");
@@ -280,7 +279,11 @@ function addDepartment() {
       let name = res;
       db.createDepartment(name)
         .then(() => console.log(`Added ${name.name} to the database`))
-        .then(() => loadMainPnrompts());
+        .catch((err) => console.log(err));
+    })
+    .then(() => {
+      console.log("this is working");
+      loadMainPrompts()
     });
   }
 
