@@ -54,6 +54,7 @@ function loadMainPrompts() {
       },
     ])
 .then((res) => {
+    let choice = res.choice;
     // switch: responds to chosen option above
     switch (choice) {
         case "VIEW_EMPLOYEES":
@@ -65,15 +66,15 @@ function loadMainPrompts() {
         // case "UPDATE_EMPLOYEE_ROLE":
         //   updateEmployeeRole();
         //   break;
-        case "VIEW_DEPARTMENTS":
-          viewDepartments();
-          break;
+        // case "VIEW_DEPARTMENTS":
+        //   viewDepartments();
+        //   break;
         // case "ADD_DEPARTMENT":
         //   addDepartment();
         //   break;
-        case "VIEW_ROLES":
-          viewRoles();
-          break;
+        // case "VIEW_ROLES":
+        //   viewRoles();
+        //   break;
         // case "ADD_ROLE":
         //   addRole();
         //   break;
@@ -82,3 +83,20 @@ function loadMainPrompts() {
 }
 });
 };
+
+// View all employees
+function viewEmployees() {
+    db.findAllEmployees()
+      .then(({ rows }) => {
+        let employees = rows;
+        console.log("\n");
+        console.table(employees);
+      })
+      .then(() => loadMainPrompts());
+  }
+
+  // Exit the application
+function quit() {
+    console.log("Thank you for coming to Sacred Heart!");
+    process.exit();
+  }
