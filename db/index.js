@@ -29,8 +29,15 @@ class DB {
         );
       }
 
+       // Update the given employee's role
+  updateEmployeeRole(employeeId, roleId) {
+    return this.query('UPDATE employee SET role_id = $1 WHERE id = $2', [
+      roleId,
+      employeeId,
+    ]);
+  }
 
-  // Find all roles, used with createEmployees
+  // Find all roles, used with createEmployee, updateEmployeeRole
   findAllRoles() {
     return this.query(
       'SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;'

@@ -63,9 +63,9 @@ function loadMainPrompts() {
         case "ADD_EMPLOYEE":
           addEmployee();
           break;
-        // case "UPDATE_EMPLOYEE_ROLE":
-        //   updateEmployeeRole();
-        //   break;
+        case "UPDATE_EMPLOYEE_ROLE":
+          updateEmployeeRole();
+          break;
         // case "VIEW_DEPARTMENTS":
         //   viewDepartments();
         //   break;
@@ -84,7 +84,7 @@ function loadMainPrompts() {
 });
 };
 
-// View all employees
+// ***View all employees
 function viewEmployees() {
     db.findAllEmployees()
       .then(({ rows }) => {
@@ -95,7 +95,7 @@ function viewEmployees() {
       .then(() => loadMainPrompts());
   }
 
-  // Add an employee
+  // ***Add an employee
 function addEmployee() {
     // PROMPT: Employee name
     prompt([
@@ -159,6 +159,50 @@ function addEmployee() {
               )
               .then(() => loadMainPrompts());
           });
+        });
+      });
+    });
+  }
+
+// ***Update an employee's role
+function updateEmployeeRole() {
+    // PROMPT: select an employee
+    db.findAllEmployees().then(({ rows }) => {
+      let employees = rows;
+      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+      }));
+  
+      prompt([
+        {
+          type: "list",
+          name: "employeeId",
+          message: "Which employee's role do you want to update?",
+          choices: employeeChoices,
+        },
+      ]).then((res) => {
+        // PROMPT: assign a new role to employee
+        let employeeId = res.employeeId;
+        db.findAllRoles().then(({ rows }) => {
+          let roles = rows;
+          const roleChoices = roles.map(({ id, title }) => ({
+            name: title,
+            value: id,
+          }));
+  
+          prompt([
+            {
+              type: "list",
+              name: "roleId",
+              message:
+                "Which role do you want to assign to the selected employee?",
+              choices: roleChoices,
+            },
+          ])
+            .then((res) => db.updateEmployeeRole(employeeId, res.roleId))
+            .then(() => console.log("Updated employee's role."))
+            .then(() => loadMainPrompts());
         });
       });
     });
