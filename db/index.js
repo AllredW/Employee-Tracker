@@ -37,12 +37,20 @@ class DB {
     ]);
   }
 
+//>>>    ROLES FUNCTIONS
   // Find all roles, used with createEmployee, updateEmployeeRole
   findAllRoles() {
     return this.query(
       'SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;'
     );
   }
+
+// >>> DEPARTMENTS FUNCTIONS
+  // Find all departments
+  findAllDepartments() {
+    return this.query('SELECT department.id, department.name FROM department;');
+  }
+
 }
 
 module.exports = new DB();

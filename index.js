@@ -66,15 +66,15 @@ function loadMainPrompts() {
         case "UPDATE_EMPLOYEE_ROLE":
           updateEmployeeRole();
           break;
-        // case "VIEW_DEPARTMENTS":
-        //   viewDepartments();
-        //   break;
+        case "VIEW_DEPARTMENTS":
+          viewDepartments();
+          break;
         // case "ADD_DEPARTMENT":
         //   addDepartment();
         //   break;
-        // case "VIEW_ROLES":
-        //   viewRoles();
-        //   break;
+        case "VIEW_ROLES":
+          viewRoles();
+          break;
         // case "ADD_ROLE":
         //   addRole();
         //   break;
@@ -83,7 +83,7 @@ function loadMainPrompts() {
 }
 });
 };
-
+// >>>EMPLOYEES FUNCTIONS
 // ***View all employees
 function viewEmployees() {
     db.findAllEmployees()
@@ -206,6 +206,30 @@ function updateEmployeeRole() {
         });
       });
     });
+  }
+
+// >>> ROLES FUNCTIONS
+// *** View all roles
+function viewRoles() {
+    db.findAllRoles()
+      .then(({ rows }) => {
+        let roles = rows;
+        console.log("\n");
+        console.table(roles);
+      })
+      .then(() => loadMainPrompts());
+  }
+
+// >>> DEPARTMENT FUNCTIONS
+// ***View all deparments
+function viewDepartments() {
+    db.findAllDepartments()
+      .then(({ rows }) => {
+        let departments = rows;
+        console.log("\n");
+        console.table(departments);
+      })
+      .then(() => loadMainPrompts());
   }
 
   // Exit the application
